@@ -1,83 +1,77 @@
 #include "simple_app.h"
 int server_socket = -1;
 
+
 void startServer() {
-  int flag = 0;
-  struct sockaddr_in server_addr, client_addr;
-  socklen_t client_len = sizeof(client_addr);
-  int client_socket;
+    struct sockaddr_in server_addr, client_addr;
+    socklen_t client_len = sizeof(client_addr);
+    int client_socket;
 
-  // Регистрируем обработчики сигналов
-  signal(SIGINT, signalHandler);
-  signal(SIGTERM, signalHandler);
+    // Регистрируем обработчики сигналов
+    signal(SIGINT, signalHandler);
+    signal(SIGTERM, signalHandler);
 
-  logMessage("Starting Simple Web Application on C");
+    logMessage("Starting Simple Web Application on C");
 
-  // Создаем сокет
-   
-  server_socket = socket(AF_INET, SOCK_STREAM, 0);
-  if (server_socket < 0) {
-    logMessage("ERROR: Failed to create socket");
-    flag = 1;
-  }
+    // Создаем сокет
+    server_socket = socket(AF_INET, SOCK_STREAM, 0);
+    if (server_socket < 0) {
+        logMessage("ERROR: Failed to create socket");
+        exit(1);
+    }
 
-  // Настраиваем адрес сервера
-  server_addr.sin_family = AF_INET;
-  server_addr.sin_addr.s_addr = INADDR_ANY;
-  server_addr.sin_port = htons(PORT);
+    // Настраиваем адрес сервера
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+    server_addr.sin_port = htons(PORT);
 
-  // Биндим сокет
-  if (bind(server_socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) <
-      0) {
-    logMessage("ERROR: Failed to bind socket");
-    close(server_socket);
-    flag = 1;
-  }
+    // Биндим сокет
+    if (bind(server_socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+        logMessage("ERROR: Failed to bind socket");
+        close(server_socket);
+        exit(1);
+    }
 
-  // Слушаем входящие соединения
-  if (listen(server_socket, 10) < 0) {
-    logMessage("ERROR: Failed to listen on socket");
-    close(server_socket);
-    flag = 1;
-  }
+    // Слушаем входящие соединения
+    if (listen(server_socket, 10) < 0) {
+        logMessage("ERROR: Failed to listen on socket");
+        close(server_socket);
+        exit(1);
+    }
 
-  if (!flag) {
     logMessage("Server is listening on port 8080");
 
     // Основной цикл сервера
     while (1) {
-      client_socket =
-          accept(server_socket, (struct sockaddr*)&client_addr, &client_len);
-      if (client_socket < 0) {
-        logMessage("ERROR: Failed to accept connection");
-        continue;
-      }
+        client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_len);
+        if (client_socket < 0) {
+            logMessage("ERROR: Failed to accept connection");
+            continue;
+        }
 
-      // Обрабатываем запрос
-      handleRequest(client_socket);
+        // Обрабатываем запрос
+        handleRequest(client_socket);
     }
-    close(server_socket);
-  }
 }
 
 void logMessage(const char* message) {
-  FILE* log_file = fopen(LOG_FILE, "a");
-  if (log_file) {
-    time_t now = time(NULL);
-    char time_buf[64];
-    strftime(time_buf, sizeof(time_buf), "%Y-%m-%d %H:%M:%S", localtime(&now));
-    fprintf(log_file, "[%s] %s\n", time_buf, message);
-    fclose(log_file);
-  }
-  printf("[%s] %s\n", message);
+    FILE* log_file = fopen(LOG_FILE, "a");
+    if (log_file) {
+        time_t now = time(NULL);
+        char time_buf[64];
+        strftime(time_buf, sizeof(time_buf), "%Y-%m-%d %H:%M:%S", localtime(&now));
+        fprintf(log_file, "[%s] %s\n", time_buf, message);
+        fclose(log_file);
+    }
+    printf("%s\n", message);  // Исправлено
 }
 
 void signalHandler(int sig) {
-  logMessage("Received shutdown signal, stoping server...");
-  if (server_socket != -1) {
-    close(server_socket);
-  }
-  exit(0);
+    logMessage("Received shutdown signal, stopping server...");
+    if (server_socket != -1) {
+        close(server_socket);
+    }
+    exit(0);
 }
 
 void sendHttpResponse(int client_socket, int status_code,
