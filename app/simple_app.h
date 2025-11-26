@@ -23,7 +23,7 @@ void startServer();
 void logMessage(const char* message);
 
 //ф-ция для обработки сигналов (graceful shutdown)
-void signalHandler(int sig);
+void signalHandler();
 
 // Ф-ция для отправки HTTP ответа
 void sendHttpResponse(int client_socket, int status_code,

@@ -66,7 +66,7 @@ void logMessage(const char* message) {
     printf("%s\n", message);  // Исправлено
 }
 
-void signalHandler(int sig) {
+void signalHandler() {
     logMessage("Received shutdown signal, stopping server...");
     if (server_socket != -1) {
         close(server_socket);

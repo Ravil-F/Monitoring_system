@@ -38,5 +38,5 @@
 2. Запустите скрипт установки:
 
 ```bash
-chmod +x scripts/install.sh
+chmod +x scripts/*.sh
 sudo ./scripts/install.sh install
