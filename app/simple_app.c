@@ -1,6 +1,7 @@
 #include "simple_app.h"
-int server_socket = -1;
 
+// Глобальная переменная для сокета (для graceful shutdown)
+int server_socket = -1;
 
 void startServer() {
     struct sockaddr_in server_addr, client_addr;

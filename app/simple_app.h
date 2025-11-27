@@ -14,15 +14,13 @@
 #define BUFFER_SIZE 1024
 #define LOG_FILE "/var/log/simple_app.log"
 
+// Главная ф-ция
 void startServer();
 
-// Глобальная переменная для сокета (для graceful shutdown)
-// extern server_socket;
-
-//ф-ция логирования
+// Ф-ция логирования
 void logMessage(const char* message);
 
-//ф-ция для обработки сигналов (graceful shutdown)
+// Ф-ция для обработки сигналов (graceful shutdown)
 void signalHandler();
 
 // Ф-ция для отправки HTTP ответа
