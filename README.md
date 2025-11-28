@@ -42,8 +42,11 @@ chmod +x scripts/*.sh
 sudo ./scripts/install.sh install
 ```
 
-## Остановка
+## Удаление
+
+1. Запустить скрипт удаления: 
 
 ```bash
-sudo systemctl stop simple-app.service
+chmod +x scripts/clean_system.sh
+sudo ./scripts/clean_system.sh
 ```
