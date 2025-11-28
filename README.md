@@ -40,3 +40,10 @@
 ```bash
 chmod +x scripts/*.sh
 sudo ./scripts/install.sh install
+```
+
+## Остановка
+
+```bash
+sudo systemctl stop simple-app.service
+```
